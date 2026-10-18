@@ -4,12 +4,13 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
+import androidx.compose.ui.draw.alpha
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,7 +37,10 @@ fun SettingsScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(24.dp))
             Row(Modifier.fillMaxWidth().height(61.dp).padding(start = 16.dp, end = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text("Темная тема", Modifier.weight(1f), fontSize = 16.sp)
-                Switch(checked = false, onCheckedChange = null, enabled = false)
+                Box(Modifier.size(56.dp, 40.dp), contentAlignment = Alignment.Center) {
+                    Image(painterResource(R.drawable.ic_switch_track), null, Modifier.offset(x = (-1.5).dp).size(32.dp, 12.dp).alpha(0.6f))
+                    Image(painterResource(R.drawable.ic_switch_knob), "Тёмная тема выключена", Modifier.offset(x = (-10).dp).size(18.dp).alpha(0.6f))
+                }
             }
             SettingsRow("Поделиться приложением", R.drawable.ic_share) {
                 open(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
@@ -62,6 +66,8 @@ private fun SettingsRow(title: String, icon: Int, onClick: () -> Unit) {
     Row(Modifier.fillMaxWidth().heightIn(min = 61.dp).clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(title, Modifier.weight(1f), fontSize = 16.sp)
         Spacer(Modifier.width(8.dp))
-        Icon(painterResource(icon), contentDescription = null, modifier = Modifier.size(24.dp), tint = Color.Unspecified)
+        Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+            Icon(painterResource(icon), contentDescription = null, modifier = if (icon == R.drawable.ic_support) Modifier.size(20.dp, 18.dp) else Modifier.size(24.dp), tint = Color.Unspecified)
+        }
     }
 }
