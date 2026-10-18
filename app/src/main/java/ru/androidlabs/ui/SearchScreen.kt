@@ -91,7 +91,7 @@ fun SearchScreen(onBack: () -> Unit, onTrack: (Track) -> Unit) {
             when {
                 query.isBlank() -> Unit
                 loading -> CircularProgressIndicator(Modifier.align(Alignment.TopCenter).padding(top = 100.dp))
-                error -> EmptyState("Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету", true, Modifier.padding(top = 102.dp))
+                error -> EmptyState("Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету", modifier = Modifier.padding(top = 102.dp), internetError = true)
                 results.isEmpty() -> EmptyState("Ничего не нашлось", modifier = Modifier.padding(top = 102.dp))
                 else -> LazyColumn(Modifier.fillMaxSize().imePadding(), contentPadding = PaddingValues(top = 16.dp)) {
                     items(results, key = { it.id }) { track ->

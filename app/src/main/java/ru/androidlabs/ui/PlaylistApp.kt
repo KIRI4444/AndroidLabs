@@ -1,6 +1,5 @@
 package ru.androidlabs.ui
 
-import android.app.Activity
 import android.graphics.Color as AndroidColor
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -10,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import ru.androidlabs.R
 import ru.androidlabs.data.MusicLibrary
 import ru.androidlabs.data.Track
@@ -24,7 +22,12 @@ fun PlaylistApp() {
     var screen by rememberSaveable { mutableStateOf("home") }
     var playerOrigin by rememberSaveable { mutableStateOf("search") }
     var selectedTrackId by rememberSaveable { mutableIntStateOf(1) }
-    val goBack: () -> Unit = { screen = if (screen == "player") playerOrigin else "home" }
+    var selectedPlaylistId by rememberSaveable { mutableIntStateOf(1) }
+    var createOrigin by rememberSaveable { mutableStateOf("playlists") }
+    val goBack: () -> Unit = {
+        screen = when (screen) { "player" -> playerOrigin; "new_playlist" -> createOrigin; "playlist" -> "playlists"; else -> "home" }
+    }
+    val newPlaylist: () -> Unit = { createOrigin = screen; screen = "new_playlist" }
     val openTrack: (Track) -> Unit = { track -> playerOrigin = screen; selectedTrackId = track.id; screen = "player" }
     BackHandler(enabled = screen != "home", onBack = goBack)
     SideEffect {
@@ -46,8 +49,15 @@ fun PlaylistApp() {
             "settings" -> SettingsScreen(goBack)
             "search" -> SearchScreen(goBack, openTrack)
             "favorites" -> FavoritesScreen(library, openTrack)
-            "player" -> PlayerScreen(mockTracks.first { it.id == selectedTrackId }, library, goBack, onNewPlaylist = { screen = "playlists" })
-            else -> ScreenLayout(stringResource(R.string.playlists), goBack) { }
+            "player" -> PlayerScreen(mockTracks.first { it.id == selectedTrackId }, library, goBack, onNewPlaylist = newPlaylist)
+            "playlists" -> PlaylistsScreen(library, goBack, newPlaylist) { playlist -> selectedPlaylistId = playlist.id; screen = "playlist" }
+            "new_playlist" -> NewPlaylistScreen(library, goBack) {
+                screenStates.removeState("new_playlist")
+                screen = createOrigin
+            }
+            "playlist" -> library.playlists.find { it.id == selectedPlaylistId }?.let { playlist ->
+                PlaylistDetailsScreen(playlist, library, goBack, openTrack)
+            }
         }
     }
 }

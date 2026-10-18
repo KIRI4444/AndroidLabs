@@ -47,7 +47,7 @@ fun CoverImage(resource: Int, uri: String?, modifier: Modifier = Modifier, descr
                 val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(imageUri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
                 val options = BitmapFactory.Options().apply {
-                    while (bounds.outWidth / (inSampleSize * 2) >= 800) inSampleSize *= 2
+                    while (maxOf(bounds.outWidth, bounds.outHeight) / (inSampleSize * 2) >= 800) inSampleSize *= 2
                 }
                 context.contentResolver.openInputStream(imageUri)?.use { BitmapFactory.decodeStream(it, null, options)?.asImageBitmap() }
             }.getOrNull()

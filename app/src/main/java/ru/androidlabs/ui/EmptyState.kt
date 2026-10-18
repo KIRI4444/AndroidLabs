@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import ru.androidlabs.R
 
 @Composable
-fun EmptyState(message: String, internetError: Boolean = false, modifier: Modifier = Modifier) {
+fun EmptyState(message: String, modifier: Modifier = Modifier, internetError: Boolean = false) {
     Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(Modifier.size(120.dp)) {
             if (internetError) {
