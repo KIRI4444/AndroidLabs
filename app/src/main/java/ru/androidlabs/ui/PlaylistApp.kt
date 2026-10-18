@@ -13,6 +13,7 @@ fun PlaylistApp() {
     when (screen) {
         R.string.app_name -> MainScreen { screen = it }
         R.string.settings -> SettingsScreen(goBack)
+        R.string.search -> SearchScreen(goBack, onTrack = {})
         else -> ScreenLayout(androidx.compose.ui.res.stringResource(screen), goBack) { }
     }
 }
